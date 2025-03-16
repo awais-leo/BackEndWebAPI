@@ -11,6 +11,14 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngularApp",
+        policy => policy.AllowAnyOrigin()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod());
+});
+
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -41,7 +49,7 @@ builder.Services.AddScoped<IProductRepository, ProductRepository.ProductRepo.Pro
 
 
 var app = builder.Build();
-
+app.UseCors("AllowAngularApp");
 // run sql script to create database and table and procedures
 
 using (var scope = app.Services.CreateScope())
@@ -65,7 +73,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();

@@ -31,6 +31,9 @@ namespace ProductService
 
         public async Task<bool> UpdateProductAsync(Product product)
         {
+            if (product.Price <= 0 || product.Quantity < 0)
+                throw new ArgumentException("Invalid price or quantity");
+
             return await _repository.UpdateProductAsync(product);
         }
 
